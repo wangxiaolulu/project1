@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>{{num}}</div>
+        <div v-on:click="handle">
+            <button v-on:click.stop="handle1">点击</button>
+        </div>
+        <div>
+            <a href="http://baidu.com" v-on:click.prevent="handle2">跳转</a>
+        </div>
+    </div>
+    <script src="assets/js/vue.js"></script>
+    <script>
+        /*
+                                            事件绑定-事件修饰符
+                                        */
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                num: 0
+            },
+            methods: {
+                handle: function() {
+                    this.num++
+                },
+                handle1: function(event) {
+                    // 阻止事件冒泡
+                    // event.stopPropagation()
+                },
+                handle2: function(event) {
+                    // 阻止默认行为
+                    // event.preventDefault();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
