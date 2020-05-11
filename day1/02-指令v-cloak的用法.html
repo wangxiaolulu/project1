@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div v-cloak>{{msg}}</div> <!-- {{插值表达式}} -->
+        <div>{{1+2}}</div>
+        <div>{{msg + '------' + 123}}</div>
+    </div>
+    <script type="text/javascript" src="assets/js/vue.js"></script>
+    <script>
+        /* 
+            v-cloak指令的用法（解决插值表达式存在的问题：页面闪动显示花括号问题）
+            1、提供样式
+                [v-cloak]{
+                    display:none
+                }
+            2、在插值表达式所在的标签中添加v-cloak指令
+
+            背后的原理：先通过样式隐藏内容，然后在内存中进行值的替换，替换好之后再显示最终的结果
+         */
+        var vm = new Vue({
+            el: '#app', //元素的挂载位置（值可以是CSS选择器或者DOM元素）
+            data: { //模型数据，值是对象
+                msg: 'hello Vue'
+            }
+        })
+    </script>
+</body>
+
+</html>
