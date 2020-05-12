@@ -9,23 +9,21 @@
 
 <body>
     <div id="app">
-        <input type="text" v-on:keyup.aaa="handle">
+        <a v-bind:href="url">百度</a>
+        <a :href="url">百度1</a>
+        <button @click="handle">切换</button>
     </div>
     <script src="assets/js/vue.js"></script>
     <script>
-        /*
-            事件绑定-自定义按键修饰符
-            规则：自定义按键修饰符名字是自定义的，但是对应的值必须是按键对应event.keyCode值
-            */
-        Vue.config.keyCodes.aaa = 65
+        // 属性绑定
         var vm = new Vue({
-            el: "#app",
+            el: '#app',
             data: {
-
+                url: 'http://www.baidu.com'
             },
             methods: {
-                handle: function(event) {
-                    console.log(event.keyCode)
+                handle: function() {
+                    this.url = "https://cn.vuejs.org/"
                 }
             }
         })
