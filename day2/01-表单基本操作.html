@@ -24,11 +24,11 @@
 
 <body>
     <div id="app">
-        <form action="">
+        <form action="http://baidu.com">
             <div>
                 <span>姓名：</span>
                 <span>
-                    <input type="text">
+                    <input type="text" v-model="uname">
                 </span>
             </div>
             <div>
@@ -55,6 +55,7 @@
                 <span>职业：</span>
                 <span>
                     <select name="" id="" multiple v-model="occupation">
+                        <!-- multiple支持多选 -->
                         <option value="0">请选择职业...</option>
                         <option value="1">教师</option>
                         <option value="2">软件工程师</option>
@@ -77,9 +78,10 @@
         var vm = new Vue({
             el: '#app',
             data: {
-                gender: 1,
-                hobby: [1],
-                occupation: [2, 3],
+                uname: '',
+                gender: 1, //单选
+                hobby: ['1'],
+                occupation: ['2', '3'], //多选，也可单选
                 desc: ''
             },
             methods: {
