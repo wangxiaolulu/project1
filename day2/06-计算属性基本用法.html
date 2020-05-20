@@ -9,28 +9,25 @@
 
 <body>
     <div id="app">
-        <input type="text" v-color="msg">
+        <div>{{msg}}</div>
+        <div>{{msg.split('').reverse().join('')}}</div>
+        <div>{{reverseString}}</div>
     </div>
     <script src="js/vue.js"></script>
     <script>
-        /* 自定义指令---带参数 */
-        Vue.directive("color", {
-            bind: function (el, binding) {
-                // 根据指令的参数设置背景色
-                console.log(el)
-                console.log(binding);
-                el.style.background = binding.value.color
-            }
-        });
+        /* 计算属性 */
         var vm = new Vue({
             el: '#app',
             data: {
-                msg: {
-                    color: 'blue'
-                }
+                msg: 'hello'
             },
             methods: {
 
+            },
+            computed: {
+                reverseString: function () {
+                    return this.msg.split('').reverse().join('')
+                }
             }
         })
     </script>
