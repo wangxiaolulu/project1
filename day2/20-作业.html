@@ -13,38 +13,83 @@
     <section id="todoapp" class="todoapp">
         <header class="header">
             <h1>todos</h1>
-            <input type="text" placeholder="What needs to be done?" class="new-todo" @keyup.enter="addTodo">
+            <input type="text" placeholder="What needs to be done?" class="new-todo" @keyup.enter="addTodo" v-focus>
         </header>
-        <section class="main">
-            <input type="checkbox" id="toggle-all" class="toggle-all">
-            <label for="toggle-all">Mark all as complete</label>
-            <ul class="todo-list">
-                <li :key="item.id" v-for="item in todos"
-                    :class="{completed:item.completed,editing:item===currentEditing}">
-                    <div class="view">
-                        <input type="checkbox" class="toggle">
-                        <label for="">{{item.title}}</label>
-                        <button class="destroy"></button>
-                    </div>
-                    <input type="text" class="edit">
-                </li>
-            </ul>
-        </section>
-        <footer class="footer">
-            <span class="todo-count"><strong></strong>item left</span>
-            <ul class="filters">
-                <li><a href="#/" class="selected">All</a></li>
-                <li><a href="#/active">Active</a></li>
-                <li><a href="#/completed">Completed</a></li>
-            </ul>
-            <button class="clear-completed">Clear completed</button>
-        </footer>
+        <!--
+        当需要按条件控制渲染多个元素的时候，可以把他们都放到 template 这个特殊的标签中。
+        Vue 会识别的它，在渲染的结果中不会包含 template 这个节点
+        -->
+        <template v-if="todos.length">
+            <section class="main">
+                <input type="checkbox" v-model="toggleStat" id="toggle-all" class="toggle-all">
+                <label for="toggle-all">Mark all as complete</label>
+                <ul class="todo-list">
+                    <!-- These are here just to show the structure of the list items -->
+                    <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+                    <!--
+                        未完成状态：不需要样式
+                        完成状态：completed
+                        编辑状态：editing
+
+                        v-bind:class="{类名: 布尔值}"
+                        当布尔值为 true 的时候，则作用这个类名
+                        当布尔值为 false 的时候，则去除这个类名
+
+                        任务项双击获得 editing 样式：
+                        这里使用一个中间变量，默认为 null ，也就是所有任务项都没有 editing 样式
+                        那 editing 的样式取决于：currentEditing 中间变量是否等价于当前任务项
+                        所以，当我双击的时候，我就手动把 currentEditing = 当前我双击的任务项
+                        那这个时候，样式判定条件 item === currentEditing 就满足了，满足就作用了这个样式。
+                    -->
+                    <li :key="item.id" v-for="(item,index) in filterTodos"
+                        :class="{completed:item.completed,editing:item===currentEditing}">
+                        <div class="view">
+                            <input type="checkbox" class="toggle" v-model="item.completed">
+                            <label for="" @dblclick="currentEditing = item">{{item.title}}</label>
+                            <button class="destroy" @click="removeTodo(index,$event)"></button>
+                        </div>
+                        <input type="text" class="edit" :value="item.title" @keyup.esc="currentEditing=null"
+                            @keyup.enter="saveEdit(item,index,$event)" @blur="saveEdit(item,index,$event)"
+                            v-editing-focus="item === currentEditing">
+                    </li>
+                </ul>
+            </section>
+            <footer class="footer">
+                <span class="todo-count"><strong>{{leftCount}}</strong>item left</span>
+                <ul class="filters" v-auto-active>
+                    <li><a href="#/" :class="{selected:filterStat==='all'}">All</a></li>
+                    <li><a href="#/active" :class="{selected:filterStat==='active'}">Active</a></li>
+                    <li><a href="#/completed" :class="{selected:filterStat==='completed'}">Completed</a></li>
+                </ul>
+                <button class="clear-completed" @click="removeAllDone">Clear completed</button>
+            </footer>
+        </template>
     </section>
     <script src="js/vue.js"></script>
     <script>
+        Vue.directive('focus', {
+            // 当被绑定的元素插入到DOM中时......
+            inserted: function (el) {
+                console.log(el)
+                // el就是作用了v-focus的DOM元素
+                el.focus()
+            }
+        })
+        Vue.directive('auto-active', {
+            inserted: function (el) {
+                // 给 a 注册点击事件
+                var links = el.getElementsByTagName('a')
+                Array.from(links).forEach(function (link) {
+                    link.onclick = function () {
+                        console.log(this)
+                    }
+                })
+            }
+        })
         var vm = new Vue({
             el: '#todoapp',
             data: {
+                filterStat: 'all',
                 currentEditing: null,
                 todos: [{
                     id: 1,
@@ -62,11 +107,127 @@
             },
             methods: {
                 addTodo: function (event) {
+                    // 1.获取文本框中用户输入的数据
+                    // 2.判断数据是否非空
+                    //     如果是空的，则什么都不做
+                    //     如果不是空的，则添加到数组中
+                    // 3.添加到数组中
+                    // 4.清空文本框
                     var todoText = event.target.value.trim();
-                    console.log(todoText)
+                    console.log(todoText);
+                    if (!todoText.length) {
+                        return
+                    }
+                    var lastTodo = this.todos[this.todos.length - 1]
+                    console.log(lastTodo);
+                    var id = lastTodo ? lastTodo.id + 1 : 1;
+                    // 当数组发生变化，则绑定渲染数组的视图也会得到更新
+                    this.todos.push({
+                        id,
+                        title: todoText,
+                        completed: false
+                    })
+                    // 清空文本框
+                    event.target.value = ''
+                },
+                // 删除任务项
+                removeTodo: function (delindex) {
+                    this.todos.splice(delindex, 1)
+                },
+                // 保存编辑项
+                saveEdit(item, index, event) {
+                    // 1.拿到文本框中的数据
+                    //     非空校验
+                    //     如果为空，则直接删除这个item
+                    //     如果不为空，则修改任务项的title数据
+                    var editText = event.target.value.trim()
+                    if (!editText.length) {
+                        // 将元素直接从数组中删除
+                        return this.todos.splice(index, 1)
+                    }
+                    // 2.将数据设置到任务项中
+                    item.title = editText
+
+                    // 3.去除editing样式
+                    this.currentEditing = null
+                },
+                // 删除所有已完成任务项
+                removeAllDone() {
+                    // 找到所有已完成的任务项，把其删除。错误的写法
+                    // 只能一个一个删除
+                    // this.todos.forEach((item, index) => {
+                    //     if (item.completed) {
+                    //         // 已完成
+                    //         console.log(item.title)
+                    //         this.todos.splice(index, 1)
+                    //     }
+                    // })
+
+                    // 把所有需要保留的数据过滤出来，然后重新赋值给 todos
+                    this.todos = this.todos.filter(item => !item.completed)
+
+                    // 如果想要就在遍历的过程去删除，则可以使用 for 循环
+                    // 没删除一个，我们可以控制让索引 --
+                    // for (let i = 0; i < this.todos.length; i++) {
+                    //     if (this.todos[i].completed) {
+                    //         this.todos.splice(i, 1)
+                    //         i--
+                    //     }
+                    // }
+                }
+            },
+            computed: {
+                toggleStat: {
+                    get() {
+                        console.log("get")
+                        return this.todos.every(item => item.completed)
+                    },
+                    set(val) {
+                        console.log("set" + "-------" + val)
+                        this.todos.forEach(todo => todo.completed = val);
+                    }
+                },
+                leftCount: function () {
+                    return this.todos.filter(item => !item.completed).length
+                },
+                filterTodos: function () {
+                    switch (this.filterStat) {
+                        case 'active':
+                            return this.todos.filter(item => !item.completed)
+                            break
+                        case 'completed':
+                            return this.todos.filter(item => item.completed)
+                            break
+                        default:
+                            return this.todos
+                            break
+                    }
+                }
+            },
+            // 配置局部自定义指令
+            directives: {
+                // 当作用了该指令的元素所在模板发生更新的时候，则这个update钩子会自动调用
+                editingFocus: {
+                    // 在指令钩子中，函数内部的this是Window
+                    update(el, binding) {
+                        if (binding.value) {
+                            el.focus()
+                        }
+                    }
                 }
             }
         })
+        window.onhashchange = function () {
+            // 得到点击的路由hash
+            var hash = window.location.hash.substr(2) || 'all'
+            // 设置到程序中的过滤状态
+            //     过滤状态一旦改变，则计算属性会感知到这个 filterStat变了
+            //     当它感知到filterstat变了之后，就会重新计算执行
+            //     当filterStat重新计算执行之后，数据得到了更新，则自动同步更新到视图中
+            vm.filterStat = hash
+        }
+        // 页面第一次进来，执行一次
+        window.onhashchange()
     </script>
 </body>
 
