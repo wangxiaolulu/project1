@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>{{pmsg}}</div>
+        <!-- 2、模板中需要使用短横线的形式 -->
+        <menu-item menu-title="来自父组件的值"></menu-item>
+        <menu-item :menu-title="ptitle"></menu-item>
+    </div>
+    <script src="js/vue.js"></script>
+    <script>
+        /* 父组件向子组件传值 -props命名规则
+        1、props中使用驼峰命名，*/
+        Vue.component('third-com', {
+            props: ['testTitle'],
+            template: `<div>{{testTitle}}</div>`
+        })
+        Vue.component('menu-item', {
+            props: ['MenuTitle'],
+            // 3、字符串形式的模板中没有限制
+            template: `<div>{{MenuTitle}}
+                <third-com testTitle="hello"></third-com>
+            </div>`
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                pmsg: '父组件中的内容',
+                ptitle: '动态绑定父组件值'
+            }
+        })
+    </script>
+</body>
+
+</html>
