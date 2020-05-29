@@ -10,11 +10,16 @@
 <body>
     <div id="app">
         <div>{{pmsg}}</div>
-        <menu-item :pstr="pstr" :pnum="12" pnum-s="14" :pboo="pboo" :parr="parr" :pobj="pobj"></menu-item>
+        <menu-item :pstr="pstr" :pnum="12" pnum-s="12" :pboo="pboo" :parr="parr" :pobj="pobj"></menu-item>
     </div>
     <script src="js/vue.js"></script>
     <script>
-        /* 父组件向子组件传值-props属性值类型 */
+        /* 父组件向子组件传值-props属性值类型 
+        String
+        Number
+        Boolean
+        Array
+        Object*/
         Vue.component('menu-item', {
             props: ['pstr', 'parr', 'pobj', 'pnum', 'pboo', 'pnumS'],
             template: `

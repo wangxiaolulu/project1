@@ -10,6 +10,8 @@
 <body>
     <div id="app">
         <div :style="{fontSize:fontSize+'px'}">{{pmsg}}</div>
+        <!-- 2 父组件用v-on 监听子组件的事件 
+            这里 enlarge-text 是从 $emit 中的第一个参数对应 handle 为对应的事件处理函数，$event代表传过来的值 -->
         <menu-item :parr="parr" @enlarge-text="handle($event)"></menu-item>
     </div>
     <script src="js/vue.js"></script>
@@ -22,6 +24,8 @@
                     <ul :key='index' v-for='(item,index) in parr'>
                         <li>{{item}}</li>    
                     </ul>    
+                    ### 1、子组件通过$emit()触发事件
+                    ### 第一个参数为 自定义的事件名称 第二个参数为需要传递的数据
                     <button @click='$emit("enlarge-text",5)'>扩大父组件中字体大小</button>
                     <button @click='$emit("enlarge-text",10)'>扩大父组件中字体大小</button>
                 </div>

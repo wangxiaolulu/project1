@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 2、 通过slot属性来指定, 这个slot的值必须和下面slot组件得name值对应上
+            如果没有匹配到 则放到匿名的插槽中 -->
+        <base-layout>
+            <p slot="header">标题信息</p>
+            <p>主要内容1</p>
+            <p>主要内容2</p>
+            <p slot="footer">底部信息</p>
+        </base-layout>
+        <base-layout>
+            <!-- 注意点：template临时的包裹标签最终不会渲染到页面上 -->
+            <template slot="header">
+                <p>标题内容1</p>
+                <p>标题内容2</p>
+            </template>
+            <p>主要内容1</p>
+            <p>主要内容2</p>
+            <template slot="footer">
+                <p>底部信息1</p>
+                <p>底部信息2</p>
+            </template>
+        </base-layout>
+    </div>
+    <script src="js/vue.js"></script>
+    <script>
+        /* 具名插槽 */
+        Vue.component('base-layout', {
+            template: `
+            <div>
+                <header>
+                    ### 1、 使用 <slot> 中的 "name" 属性绑定元素 指定当前插槽的名字
+                    <slot name='header'></slot>
+                </header>
+                <main>
+                    <slot></slot>
+                </main>
+                <footer>
+                    ### 注意点： 
+                    ### 具名插槽的渲染顺序，完全取决于模板，而不是取决于父组件中元素的顺序
+                    <slot name='footer'></slot>
+                </footer>
+            </div>
+            `
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+
+            }
+        })
+    </script>
+</body>
+
+</html>
