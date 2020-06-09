@@ -35,18 +35,20 @@
     <script>
         /* 具名插槽 */
         Vue.component('base-layout', {
+            // ### 1、 使用 <slot> 中的 "name" 属性绑定元素 指定当前插槽的名字
+            // ### 注意点：
+            // ### 具名插槽的渲染顺序，完全取决于模板，而不是取决于父组件中元素的顺序
             template: `
             <div>
                 <header>
-                    ### 1、 使用 <slot> 中的 "name" 属性绑定元素 指定当前插槽的名字
+                    
                     <slot name='header'></slot>
                 </header>
                 <main>
                     <slot></slot>
                 </main>
                 <footer>
-                    ### 注意点： 
-                    ### 具名插槽的渲染顺序，完全取决于模板，而不是取决于父组件中元素的顺序
+                    
                     <slot name='footer'></slot>
                 </footer>
             </div>
