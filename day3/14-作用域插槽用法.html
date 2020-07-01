@@ -29,11 +29,11 @@
         Vue.component('fruit-list', {
             props: ['list'],
             template: `
-                <div>
+                <ul>
                     <li :key='item.id' v-for='(item,index) in list'>
                         <slot :info='item'>{{item.name}}</slot>
                     </li>   
-                </div>
+                </ul>
             `
         })
         var vm = new Vue({

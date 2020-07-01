@@ -13,6 +13,7 @@
             如果没有匹配到 则放到匿名的插槽中 -->
         <base-layout>
             <p slot="header">标题信息</p>
+            <p slot="header">标题信息2</p>
             <p>主要内容1</p>
             <p>主要内容2</p>
             <p slot="footer">底部信息</p>
@@ -40,15 +41,13 @@
             // ### 具名插槽的渲染顺序，完全取决于模板，而不是取决于父组件中元素的顺序
             template: `
             <div>
-                <header>
-                    
+                <header> 
                     <slot name='header'></slot>
                 </header>
                 <main>
                     <slot></slot>
                 </main>
-                <footer>
-                    
+                <footer>                 
                     <slot name='footer'></slot>
                 </footer>
             </div>
