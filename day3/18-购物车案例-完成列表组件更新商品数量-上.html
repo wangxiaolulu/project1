@@ -117,6 +117,8 @@
         // 3.2 把列表数据动态渲染到页面上
         var CartList = {
             props: ['list'],
+            // 1、将输入框中的默认数据动态渲染出来
+            // 2、输入框失去焦点的时候，更改商品的数量，需要将当前商品的id传递过来
             template: `
                 <div>
                     <div :key="item.id" v-for="item in list" class="item">
@@ -124,7 +126,7 @@
                         <div class="name">{{item.name}}</div>
                         <div class="change">
                             <a href="">－</a>
-                            <input type="text" class="num" :value="item.num"/>
+                            <input type="text" class="num" :value="item.num" @blur="changeNum(item.id,$event)"/>
                             <a href="">＋</a>
                         </div>
                         <div class="del" @click="del(item.id)">×</div>
@@ -138,6 +140,15 @@
                     // # 我们需要把数据传递给父组件 让父组件操作数据
                     //把id传递给父组件
                     this.$emit('cart-del', id)
+                },
+                changeNum: function (id, event) {
+                    console.log(id, event.target.value);
+                    // 3、子组件中不推荐操作父组件的数据有可能多个子组件使用父组件的数据
+                    //  我们需要把数据传递给父组件 让父组件操作数据
+                    this.$emit('change-num', {
+                        id: id,
+                        num: event.target.value
+                    })
                 }
             }
         }
@@ -199,11 +210,11 @@
                     }]
                 }
             },
-
+            // 4、父组件接收子组件传过来的数据
             template: `
                 <div class="cart">
                     <cart-title :uname="uname"></cart-title>
-                    <cart-list :list="list" @cart-del="delCart($event)"></cart-list>
+                    <cart-list :list="list" @change-num="changeNum($event)" @cart-del="delCart($event)"></cart-list>
                     <cart-total :list="list"></cart-total>
                 </div>
             `,
@@ -222,6 +233,17 @@
                     })
                     // 2、根据索引删除对应数据
                     this.list.splice(index, 1)
+                },
+                changeNum: function (val) {
+                    console.log(val);
+                    // 4.1根据子组件传递过来的数据，更新list中对应的数据
+                    this.list.some(item => {
+                        if (item.id == val.id) {
+                            item.num = val.num;
+                            // 终止遍历
+                            return true
+                        }
+                    })
                 }
             }
         })
