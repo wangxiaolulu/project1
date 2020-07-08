@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前后端交互</title>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="js/jquery.js"></script>
+    <script>
+        // 前后端交互-异步编程与promise概述
+        var ret = '---';
+        $.ajax({
+            url: 'http://localhost:3000/data',
+            success: function (data) {
+                ret = data;
+                console.log(ret)
+            }
+        })
+    </script>
+</body>
+
+</html>
