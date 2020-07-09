@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /* Promise常用API——实例方法 */
+        // console.dir(Promise)
+        function foo() {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    // resolve("success")
+                    reject('error')
+                }, 100)
+            })
+        }
+        /* foo()
+            .then(function (data) {
+                console.log(data)
+            })
+            .catch(function (data) {
+                console.log(data)
+            })
+            .finally(function () {
+                console.log("finish")
+            }) */
+        // 两种写法是等效的
+        foo()
+            .then(function (data) {
+                // 得到异步任务正确的结果
+                console.log(data)
+            }, function (info) {
+                // 获取异常信息
+                console.log(info)
+            })
+            .finally(function () {
+                // 成功与否都会执行（不是正式标准）
+                console.log("finish")
+            })
+    </script>
+</body>
+
+</html>

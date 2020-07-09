@@ -9,9 +9,9 @@
 
 <body>
     <script>
-        // 基于Promise发送Ajax请求
+        // then参数中的函数返回值,两种情况
         function queryData(url) {
-            var p = new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState != 4) return;
@@ -26,26 +26,26 @@
                 xhr.open('get', url);
                 xhr.send(null)
             })
-            return p;
         }
-        /* queryData('http://localhost:3000/data').then(function (data) {
-            console.log(data)
-        }, function (info) {
-            console.log(info)
-        }) */
-        //=======================================
-        // 发送多个ajax请求，并且保证顺序
         queryData('http://localhost:3000/data')
             .then(function (data) {
                 console.log(data);
                 return queryData('http://localhost:3000/data1')
             })
             .then(function (data) {
-                console.log(data);
-                return queryData('http://localhost:3000/data2')
+                // 1、返回promise实例对象，返回的该实例会调用下一个then
+                return new Promise(function (resolve, reject) {
+                    setTimeout(function () {
+                        resolve("123")
+                    }, 1000)
+                })
             })
             .then(function (data) {
-                console.log(data);
+                // 2、返回普通值，返回的普通值会直接传递给下一个then，通过then参数中函数的参数接收该值
+                return "hello"
+            })
+            .then(function (data) {
+                console.log(data)
             })
     </script>
 </body>
