@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // Fetch响应结果的数据格式
+        fetch('http://localhost:3000/json').then(function(data) {
+            // return data.json() //将获取到的数据使用 json 转换对象
+            return data.text()
+        }).then(function(data) {
+            // console.log(data)
+            // console.log(data.uname)
+            // console.log(typeof data)
+            var obj = JSON.parse(data);
+            console.log(obj.uname, obj.age, obj.gender)
+        })
+    </script>
+</body>
+
+</html>
