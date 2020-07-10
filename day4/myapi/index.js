@@ -39,7 +39,7 @@ app.get('/axios/:id', (req, res) => {
   res.send('axios get (Restful) 传递参数' + req.params.id)
 })
 app.delete('/axios', (req, res) => {
-  res.send('axios get 传递参数' + req.query.id)
+  res.send('axios delete 传递参数' + req.query.id)
 })
 app.post('/axios', (req, res) => {
   res.send('axios post 传递参数' + req.body.uname + '---' + req.body.pwd)

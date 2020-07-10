@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="js/axios.js"></script>
+    <script>
+        // 1、发送get 请求
+        axios.get('http://localhost:3000/adata').then(function (ret) {
+            // 拿到 ret 是一个对象 所有的对象都存在 ret 的data 属性里面
+            // 注意data属性是固定的用法，用于获取后台的实际数据
+            // console.log(ret.data)
+            console.log(ret)
+            console.log(ret.data)
+        })
+    </script>
+</body>
+
+</html>
