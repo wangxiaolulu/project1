@@ -41,6 +41,29 @@
         }).then(function (ret) {
             console.log(ret.data)
         })
+        // 4 axios 的 post 请求
+        // 4.1 通过选项传递参数
+        axios.post('http://localhost:3000/axios', {
+            uname: 'lisi',
+            pwd: '12345'
+        }).then(function (ret) {
+            console.log(ret.data)
+        })
+        // 4.2 通过 URLSearchParams 传递参数
+        var params = new URLSearchParams;
+        params.append('uname', 'zhangsan');
+        params.append('pwd', '09876');
+        axios.post('http://localhost:3000/axios', params).then(function (ret) {
+            console.log(ret.data)
+        })
+
+        // 5 axios put 请求传参 和 post 请求一样
+        axios.put('http://localhost:3000/axios/0123', {
+            uname: 'wang',
+            pwd: '00000'
+        }).then(function (ret) {
+            console.log(ret.data)
+        })
     </script>
 </body>
 
