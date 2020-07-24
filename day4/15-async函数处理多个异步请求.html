@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="js/axios.js"></script>
+    <script>
+        // async/await 处理多个异步函数
+        // 2. async 函数处理多个异步函数
+        axios.defaults.baseURL = 'http://localhost:3000';
+        async function queryData() {
+            // 2.1 添加await之后 当前的await 返回结果之后才会执行后面的代码
+            var info = await axios.get('async1');
+            // 2.2 让异步代码看起来、表现起来更像同步代码
+            var ret = await axios.get('async2?info=' + info.data);
+            return ret.data
+        }
+        queryData().then(function (data) {
+            console.log(data)
+        })
+    </script>
+</body>
+
+</html>
