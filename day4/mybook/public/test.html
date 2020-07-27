@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="grid">
+            <table>
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 5. 把books 中的数据渲染到页面上 -->
+                    <tr :key='item.id' v-for='item in books'>
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.date }}</td>
+                        <td>
+                            <a href="">修改</a>
+                            <span>|</span>
+                            <a href="">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/vue.js"></script>
+    <!-- 1、导入axios -->
+    <script src="js/axios.js"></script>
+    <script>
+        /* 
+        图书管理-添加图书
+         */
+        /* 2、配置公共的url地址，简化后面的调用方式 */
+        axios.defaults.baseURL = 'http://localhost:3000/';
+        axios.interceptors.response.use(function (res) {
+            return res.data
+        }, function (error) {
+            console.log(error)
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                books: []
+            },
+            methods: {
+                /* 3、定义一个方法，用来发送ajax */
+                /*  3.1 使用 async 来 让异步的代码 以同步的形式书写 */
+                queryData: async function () {
+                    // var ret = await axios.get('books');
+                    // this.books = ret;
+                    /* 3.2 发送ajax请求 把拿到的数据放在books 里面 */
+                    this.books = await axios.get('books')
+                }
+
+            },
+            mounted: function () {
+                /* 4 mounted 里面 DOM已经加载完毕 在这里调用函数 */
+                this.queryData()
+            }
+        })
+    </script>
+</body>
+
+</html>
