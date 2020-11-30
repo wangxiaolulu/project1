@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 引入vue文件 -->
+    <script src="lib/vue_2.5.22.js"></script>
+    <script src="lib/vue-router_3.0.2.js"></script>
+</head>
+
+<body>
+    <!-- 被vm实例控制区域 -->
+    <div id="app">
+        <!-- 添加路由链接 -->
+        <router-link to="/User/1">User1</router-link>
+        <router-link to="/User/2">User2</router-link>
+        <router-link to="/User/3">User3</router-link>
+        <router-link to="/Register">Register</router-link>
+        <!-- 添加路由占位符 -->
+        <router-view></router-view>
+    </div>
+    <script>
+        // 创建路由组件
+        const User = {
+            props: ['id'], //通过props接收路由参数
+            template: '<h1>用户id为{{id}}</h1>'
+        }
+        const Register = {
+            template: '<h1>Register组件</h1>'
+        }
+        // 创建路由实例对象
+        const router = new VueRouter({
+            routes: [{
+                path: '/',
+                redirect: '/user'
+            }, {
+                path: '/user/:id', //通过/:参数名 的形式传递参数
+                component: User,
+                props: true //如果props设置为true，route.params将会被设置为组件属性
+            }, {
+                path: '/register',
+                component: Register
+            }]
+        })
+        // 创建vm实例
+        const vm = new Vue({
+            el: "#app",
+            data: {},
+            // 挂载路由实例
+            router
+        })
+    </script>
+</body>
+
+</html>
