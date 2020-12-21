@@ -1,0 +1,25 @@
+node.js中通过babel体验ES6
+安装babel相关依赖
+1、npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/node 
+2、npm install --save @babel/polyfill
+
+执行代码
+npx babel-node index.js
+
+
+
+webpack
+1、新引入package.json
+2、npm init –y
+3、npm install jquery –S 命令，安装 jQuery
+
+安装webpack
+1、npm install webpack webpack-cli -D
+2、npm run dev
+
+配置 webpack 的自动打包功能
+npm install webpack-dev-server –D 命令，安装支持项目自动打包的工具
+
+
+配置 html-webpack-plugin 生成预览页面
+npm install html-webpack-plugin –D
