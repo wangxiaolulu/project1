@@ -12,5 +12,14 @@ module.exports = {
         path: path.join(__dirname,'./dist'),     //设置输出文件路径
         filename: 'bundle.js'                     //输出文件名称
     },
-    plugins: [htmlPlugin] // plugins 数组是 webpack 打包期间会用到的一些插件列表
+    plugins: [htmlPlugin], // plugins 数组是 webpack 打包期间会用到的一些插件列表
+    module:{      //所有第三方文件模块的匹配规则
+        rules:[
+            {test:/\.css$/,use:['style-loader','css-loader','postcss-loader']},   //test表示匹配的文件类型，use表示对应要调用的loader，多个loader调用顺序，从后往前
+            {test:/\.less$/,use:['style-loader','css-loader','less-loader']},
+            {test:/\.scss$/,use:['style-loader','css-loader','sass-loader']},
+            {test:/\.jpg|png|gif|bmp|ttf|eot|svg|woff|woff2$/,use:'url-loader?limit=16940'},   //?之后是loader的参数，limit用来指定图片的大小，单位是字节（byte）。只有小于limit大小的图片，才会呗转为base64
+            {test:/\.js$/,use:'babel-loader',exclude:/node_modules/}    //exclude表示排除项，不需要处理node_modules中的js 文件
+        ]
+    }
 }
